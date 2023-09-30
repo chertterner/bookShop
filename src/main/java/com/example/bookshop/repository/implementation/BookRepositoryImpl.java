@@ -4,7 +4,6 @@ import com.example.bookshop.exceptions.DataProcessingException;
 import com.example.bookshop.model.Book;
 import com.example.bookshop.repository.BookRepository;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,7 +16,6 @@ public class BookRepositoryImpl implements BookRepository {
     @Autowired
     private SessionFactory sessionFactory;
 
-    @Transactional
     @Override
     public Book save(Book book) {
         Session session = null;
