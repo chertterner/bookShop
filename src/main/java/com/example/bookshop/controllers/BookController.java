@@ -29,7 +29,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     public BookDto getBookById(@PathVariable Long id) {
-        return bookService.getBookById(id);
+        return bookService.get(id);
     }
 
     @PostMapping
@@ -40,11 +40,11 @@ public class BookController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBookById(@PathVariable Long id) {
-        bookService.deleteBookById(id);
+        bookService.delete(id);
     }
 
     @PutMapping("/{id}")
     public void updateBookById(@PathVariable Long id, @RequestBody CreateBookRequestDto bookDto) {
-        bookService.updateBookById(id, bookDto);
+        bookService.update(id, bookDto);
     }
 }

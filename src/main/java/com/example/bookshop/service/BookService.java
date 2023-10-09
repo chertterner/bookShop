@@ -9,9 +9,9 @@ public interface BookService {
 
     List<BookDto> findAll();
 
-    BookDto getBookById(Long id);
+    BookDto get(Long id);
 
-    void deleteBookById(Long id);
+    void delete(Long id);
 
-    void updateBookById(Long id, CreateBookRequestDto book);
+    void update(Long id, CreateBookRequestDto book);
 }

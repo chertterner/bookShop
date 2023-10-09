@@ -6,9 +6,9 @@ import com.example.bookshop.mappers.BookMapper;
 import com.example.bookshop.model.Book;
 import com.example.bookshop.repository.BookRepository;
 import com.example.bookshop.service.BookService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -29,26 +29,23 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto getBookById(Long id) {
-        return bookMapper.toDto(bookRepository.getById(id));
+    public BookDto get(Long id) {
+        return bookMapper.toDto(bookRepository.getReferenceById(id));
     }
 
     @Override
-    public void deleteBookById(Long id) {
+    public void delete(Long id) {
         bookRepository.deleteById(id);
     }
 
     @Override
-    public void updateBookById(Long id, CreateBookRequestDto bookDto) {
-        Book book = bookMapper.toModel(bookDto);
-        bookRepository.findById(id).map(book1 -> {
-            book1.setAuthor(book.getAuthor());
-            book1.setDescription(book.getDescription());
-            book1.setIsbn(book.getIsbn());
-            book1.setPrice(book.getPrice());
-            book1.setCoverImage(book.getCoverImage());
-            book1.setTitle(book.getTitle());
-            return bookRepository.save(book1);
-        }).orElseGet(() -> bookRepository.save(book));
+    public void update(Long id, CreateBookRequestDto bookDto) {
+        bookRepository.findById(id)
+                .map(book1 ->
+                    bookRepository
+                        .save(bookMapper.toModel(bookDto)))
+                .orElseGet(() -> bookRepository
+                        .save(bookMapper
+                                .toModel(bookDto)));
     }
 }
