@@ -2,6 +2,7 @@ package com.example.bookshop.service.implementation;
 
 import com.example.bookshop.dto.BookDto;
 import com.example.bookshop.dto.CreateBookRequestDto;
+import com.example.bookshop.exceptions.EntityNotFoundException;
 import com.example.bookshop.mappers.BookMapper;
 import com.example.bookshop.model.Book;
 import com.example.bookshop.repository.BookRepository;
@@ -39,13 +40,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void update(Long id, CreateBookRequestDto bookDto) {
-        bookRepository.findById(id)
-                .map(book1 ->
-                    bookRepository
-                        .save(bookMapper.toModel(bookDto)))
-                .orElseGet(() -> bookRepository
-                        .save(bookMapper
-                                .toModel(bookDto)));
+    public BookDto update(Long id, CreateBookRequestDto bookDto) {
+        if (!bookRepository.existsById(id)) {
+            throw new EntityNotFoundException("Can't found book with id: " + id);
+        }
+        Book book = bookMapper.toModel(bookDto);
+        book.setId(id);
+        return bookMapper.toDto(bookRepository.save(book));
     }
 }
