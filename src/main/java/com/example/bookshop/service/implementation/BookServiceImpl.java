@@ -9,6 +9,7 @@ import com.example.bookshop.repository.BookRepository;
 import com.example.bookshop.service.BookService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,8 +26,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findAll() {
-        return bookRepository.findAll().stream().map(bookMapper::toDto).toList();
+    public List<BookDto> findAll(Pageable pageabale) {
+        return bookRepository.findAll(pageabale).stream().map(bookMapper::toDto).toList();
     }
 
     @Override
