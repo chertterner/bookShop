@@ -2,11 +2,15 @@ package com.example.bookshop.service;
 
 import com.example.bookshop.dto.BookDto;
 import com.example.bookshop.dto.CreateBookRequestDto;
+import com.example.bookshop.model.Book;
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {
     BookDto save(CreateBookRequestDto book);
+
+    List<Book> getAll(Map<String, List<String>> params);
 
     List<BookDto> findAll(Pageable pageable);
 
