@@ -32,20 +32,22 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAll(Map<String, List<String>> params) {
+    public List<BookDto> getAll(Map<String, List<String>> params) {
         Specification<Book> specification = null;
         for (Map.Entry entry : params.entrySet()) {
-            Specification<Book> sp = specificationProvider
-                    .getSpecification((List<String>) entry.getValue(),
-                            (String) entry.getKey());
+            Specification<Book> sp = specificationProvider.getSpecification(
+                    (List<String>) entry.getValue(),
+                    (String) entry.getKey());
             specification = specification == null ? Specification.where(sp) : specification.and(sp);
         }
-        return bookRepository.findAll(Objects.requireNonNull(specification));
+        return bookRepository.findAll(Objects.requireNonNull(specification))
+                .stream().map(bookMapper::toDto)
+                .toList();
     }
 
     @Override
-    public List<BookDto> findAll(Pageable pageabale) {
-        return bookRepository.findAll(pageabale).stream().map(bookMapper::toDto).toList();
+    public List<BookDto> findAll(Pageable pageable) {
+        return bookRepository.findAll(pageable).stream().map(bookMapper::toDto).toList();
     }
 
     @Override
