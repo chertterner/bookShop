@@ -6,7 +6,6 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.apache.commons.beanutils.BeanUtils;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
-
     private String firstFieldName;
     private String secondFieldName;
     private String message;
@@ -28,7 +27,7 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
             valid = firstObj == null && secondObj == null || firstObj != null
                     && firstObj.equals(secondObj);
         } catch (final Exception ignore) {
-            // ignore
+            throw new RuntimeException("There are not equals passwords!");
         }
 
         if (!valid) {
