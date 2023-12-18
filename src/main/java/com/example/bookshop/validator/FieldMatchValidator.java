@@ -1,6 +1,5 @@
-package com.example.bookshop.validators;
+package com.example.bookshop.validator;
 
-import com.example.bookshop.annotation.FieldMatch;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.apache.commons.beanutils.BeanUtils;

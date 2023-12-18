@@ -1,6 +1,6 @@
 package com.example.bookshop.dto;
 
-import com.example.bookshop.annotation.FieldMatch;
+import com.example.bookshop.validator.FieldMatch;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

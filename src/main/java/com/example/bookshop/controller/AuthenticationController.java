@@ -1,9 +1,8 @@
-package com.example.bookshop.controllers;
+package com.example.bookshop.controller;
 
-import com.example.bookshop.dto.UserLoginRequestDto;
 import com.example.bookshop.dto.UserRegistrationRequestDto;
 import com.example.bookshop.dto.UserResponseDto;
-import com.example.bookshop.exceptions.RegistrationException;
+import com.example.bookshop.exception.RegistrationException;
 import com.example.bookshop.security.AuthenticationService;
 import com.example.bookshop.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,10 +24,5 @@ public class AuthenticationController {
     public UserResponseDto register(@RequestBody UserRegistrationRequestDto request)
             throws RegistrationException {
         return userService.register(request);
-    }
-
-    @PostMapping("/login")
-    public boolean login(@RequestBody UserLoginRequestDto request) throws RegistrationException {
-        return authenticationService.login(request);
     }
 }

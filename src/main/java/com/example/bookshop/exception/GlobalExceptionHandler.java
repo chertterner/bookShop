@@ -1,4 +1,4 @@
-package com.example.bookshop.exceptions;
+package com.example.bookshop.exception;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
