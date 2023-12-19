@@ -1,4 +1,4 @@
-package com.example.bookshop.controllers;
+package com.example.bookshop.controller;
 
 import com.example.bookshop.dto.BookDto;
 import com.example.bookshop.dto.BookSearchParametersDto;
