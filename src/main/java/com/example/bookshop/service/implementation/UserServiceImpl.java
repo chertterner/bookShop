@@ -24,10 +24,11 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(userRegistrationRequestDto.getEmail()).isPresent()) {
             throw new RegistrationException("This email is exist! Change your email!");
         }
-        userRegistrationRequestDto.setPassword(
-                passwordEncoder.encode(userRegistrationRequestDto
-                        .getPassword()));
         User user = userMapper.toModel(userRegistrationRequestDto);
+        user.setPassword(
+                passwordEncoder.encode(userRegistrationRequestDto
+                        .getPassword())
+        );
         userRepository.save(user);
         return userMapper.toUserResponceDto(user);
     }

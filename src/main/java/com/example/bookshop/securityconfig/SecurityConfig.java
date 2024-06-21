@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers(
-                                "/swagger-ui/**", "/v3/api-docs/**", "api/registration")
+                                        "/swagger-ui/**", "/v3/api-docs/**", "api/registration")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -35,6 +35,5 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .userDetailsService(userDetailsService)
                 .build();
-
     }
 }
