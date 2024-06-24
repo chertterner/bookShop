@@ -6,6 +6,7 @@ import com.example.bookshop.exception.RegistrationException;
 import com.example.bookshop.mapper.UserMapper;
 import com.example.bookshop.model.Role;
 import com.example.bookshop.model.User;
+import com.example.bookshop.repository.RoleRepository;
 import com.example.bookshop.repository.UserRepository;
 import com.example.bookshop.service.UserService;
 import java.util.HashSet;
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto userRegistrationRequestDto)
@@ -32,11 +34,8 @@ public class UserServiceImpl implements UserService {
                 passwordEncoder.encode(userRegistrationRequestDto
                         .getPassword())
         );
-        Set<Role> roles = new HashSet<>();
-        Role role = new Role();
-        role.setRole(Role.RoleName.USER);
-        roles.add(role);
-        user.setRoles(roles);
+        Role role = roleRepository.findRoleByRoleName(Role.RoleName.USER);
+        user.setRoles(Set.of(role));
         userRepository.save(user);
         return userMapper.toUserResponceDto(user);
     }
