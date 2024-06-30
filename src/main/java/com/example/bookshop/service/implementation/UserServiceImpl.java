@@ -9,7 +9,6 @@ import com.example.bookshop.model.User;
 import com.example.bookshop.repository.RoleRepository;
 import com.example.bookshop.repository.UserRepository;
 import com.example.bookshop.service.UserService;
-import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,8 +33,8 @@ public class UserServiceImpl implements UserService {
                 passwordEncoder.encode(userRegistrationRequestDto
                         .getPassword())
         );
-        Role role = roleRepository.findRoleByRoleName(Role.RoleName.USER);
-        user.setRoles(Set.of(role));
+        Role userRole = roleRepository.findByRole(Role.RoleName.USER);
+        user.setRoles(Set.of(userRole));
         userRepository.save(user);
         return userMapper.toUserResponceDto(user);
     }
