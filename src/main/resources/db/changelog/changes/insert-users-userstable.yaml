@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: admin
+      changes:
+        - insert:
+            tableName: users
+            columns:
+            - column: {name : email, value : "serg.gmail"}
+            - column: {name : first_name, value : "serg"}
+            - column: {name : last_name, value : "kud"}
+            - column: {name : password, value : "$2a$10$e.Xqom03eOXxs9kJVthbKeL9veG03q2D71fznLfl0XJeI1xFPZrVG"}
+            - column: {name : shipping_address, value : "Odessa"}
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "k.gmail" }
+              - column: { name: first_name, value: "k" }
+              - column: { name: last_name, value: "k" }
+              - column: { name: password, value: "$2a$10$e.Xqom03eOXxs9kJVthbKeL9veG03q2D71fznLfl0XJeI1xFPZrVG" }
+              - column: { name: shipping_address, value: "Odessa" }

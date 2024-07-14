@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: admin
+      changes:
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "book" }
+              - column: { name: author, value: "serg" }
+              - column: { name: isbn, value: "some" }
+              - column: { name: price, value: "1234" }
+              - column: { name: description, value: "about" }
+              - column: { name: cover_image, value: "about" }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "book1" }
+              - column: { name: author, value: "serg1" }
+              - column: { name: isbn, value: "some1" }
+              - column: { name: price, value: "12345" }
+              - column: { name: description, value: "about1" }
+              - column: { name: cover_image, value: "about1" }
