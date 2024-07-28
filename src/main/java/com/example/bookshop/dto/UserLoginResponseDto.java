@@ -1,4 +1,12 @@
 package com.example.bookshop.dto;
 
-public record UserLoginResponseDto(String token) {
+import lombok.Data;
+
+@Data
+public class UserLoginResponseDto {
+    private String token;
+
+    public UserLoginResponseDto(String userToken) {
+        token = userToken;
+    }
 }
