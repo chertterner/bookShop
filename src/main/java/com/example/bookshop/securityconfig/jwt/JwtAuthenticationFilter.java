@@ -1,4 +1,4 @@
-package com.example.bookshop.security;
+package com.example.bookshop.securityconfig.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

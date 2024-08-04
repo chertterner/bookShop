@@ -1,6 +1,6 @@
 package com.example.bookshop.securityconfig;
 
-import com.example.bookshop.security.JwtAuthenticationFilter;
+import com.example.bookshop.securityconfig.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

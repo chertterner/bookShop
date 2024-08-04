@@ -1,4 +1,4 @@
-package com.example.bookshop.security;
+package com.example.bookshop.securityconfig.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -9,16 +9,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
     private final SecretKey secret;
-    @Value("${jwt.expiration}")
-    private long expiration;
+    private final Long expiration;
 
-    public JwtUtil(@Value("${jwt.secret}") String secretString) {
+    public JwtUtil() {
+        String secretString = "serg123456789qwrtyuiopasdfghjklzxcvbnm";
+        expiration = 300000L;
         secret = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
     }
 
