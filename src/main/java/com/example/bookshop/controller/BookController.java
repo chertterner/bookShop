@@ -1,6 +1,7 @@
 package com.example.bookshop.controller;
 
 import com.example.bookshop.dto.BookDto;
+import com.example.bookshop.dto.BookDtoWithoutCategoryIds;
 import com.example.bookshop.dto.BookSearchParametersDto;
 import com.example.bookshop.dto.CreateBookRequestDto;
 import com.example.bookshop.service.BookService;
@@ -36,7 +37,7 @@ public class BookController {
 
     @Operation(summary = "Get all books", description = "Find all books")
     @GetMapping
-    public List<BookDto> getAll(Pageable pageable) {
+    public List<BookDtoWithoutCategoryIds> getAll(Pageable pageable) {
         return bookService.findAll(pageable);
     }
 

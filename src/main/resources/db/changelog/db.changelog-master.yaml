@@ -6,7 +6,11 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/create-table-roles.yaml
   - include:
+      file: db/changelog/changes/create-table-category.yaml
+  - include:
       file: db/changelog/changes/create-users-roles-table.yaml
+  - include:
+      file: db/changelog/changes/create-book-category.yaml
   - include:
       file: db/changelog/changes/insert-users-userstable.yaml
   - include:
@@ -15,3 +19,7 @@ databaseChangeLog:
       file: db/changelog/changes/insert-roles.yaml
   - include:
       file: db/changelog/changes/insert-users-roles.yaml
+  - include:
+      file: db/changelog/changes/insert-category.yaml
+  - include:
+      file: db/changelog/changes/insert-book-category.yaml
