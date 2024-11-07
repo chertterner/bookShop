@@ -1,9 +1,12 @@
 package com.example.bookshop.service.implementation;
 
+import com.example.bookshop.dto.BookDto;
 import com.example.bookshop.dto.CategoryDto;
 import com.example.bookshop.exception.EntityNotFoundException;
+import com.example.bookshop.mapper.BookMapper;
 import com.example.bookshop.mapper.CategoryMapper;
 import com.example.bookshop.model.Category;
+import com.example.bookshop.repository.BookRepository;
 import com.example.bookshop.repository.CategoryRepository;
 import com.example.bookshop.service.CategoryService;
 import java.util.List;
@@ -17,6 +20,10 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private BookRepository bookRepository;
+    @Autowired
+    private BookMapper bookMapper;
 
     @Override
     public List<CategoryDto> findAll(Pageable pageable) {
@@ -28,15 +35,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getById(Long id) {
-        return categoryMapper.toDto(categoryRepository.getReferenceById(id));
+        return categoryMapper.toDto(categoryRepository.findById(id));
     }
 
     @Override
     public CategoryDto save(CategoryDto categoryDto) {
-        return categoryMapper.toDto(categoryRepository.save(
-                        categoryMapper.toEntity(categoryDto)
-                )
-        );
+        Category category = categoryMapper.toEntity(categoryDto);
+        return categoryMapper.toDto(categoryRepository.save(category));
     }
 
     @Override
@@ -45,12 +50,16 @@ public class CategoryServiceImpl implements CategoryService {
             throw new EntityNotFoundException("Can't found category with id: " + id);
         }
         Category category = categoryMapper.toEntity(categoryDto);
-        category.setId(id);
         return categoryMapper.toDto(categoryRepository.save(category));
     }
 
     @Override
     public void deleteById(Long id) {
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public List<BookDto> findAllByCategoryId(Long id) {
+        return bookRepository.findAllByCategoryId(id).stream().map(bookMapper::toDto).toList();
     }
 }
