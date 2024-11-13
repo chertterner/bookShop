@@ -4,7 +4,7 @@ databaseChangeLog:
       author: admin
       changes:
         - createTable:
-            tableName: category
+            tableName: categories
             columns:
               - column:
                   name: id

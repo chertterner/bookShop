@@ -4,7 +4,7 @@ databaseChangeLog:
       author: admin
       changes:
         - createTable:
-            tableName: book_category
+            tableName: books_categories
             columns:
               - column:
                   name: book_id
@@ -12,9 +12,11 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+                    foreignKeyName: book_id
               - column:
                   name: category_id
                   type: bigint
                   constraints:
                     primaryKey: true
                     nullable: false
+                    foreignKeyName: category_id

@@ -1,10 +1,10 @@
 package com.example.bookshop.service;
 
 import com.example.bookshop.dto.BookDto;
-import com.example.bookshop.dto.BookDtoWithoutCategoryIds;
 import com.example.bookshop.dto.BookSearchParametersDto;
 import com.example.bookshop.dto.CreateBookRequestDto;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {
@@ -12,7 +12,7 @@ public interface BookService {
 
     List<BookDto> findByBookCriteria(BookSearchParametersDto bookSearchParametersDto);
 
-    List<BookDtoWithoutCategoryIds> findAll(Pageable pageable);
+    Page<BookDto> findAll(Pageable pageable);
 
     BookDto get(Long id);
 

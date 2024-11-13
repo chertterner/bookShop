@@ -4,12 +4,12 @@ databaseChangeLog:
       author: admin
       changes:
         - insert:
-            tableName: category
+            tableName: categories
             columns:
               - column: { name: name, value: "horror" }
               - column: { name: description, value: "horror books" }
         - insert:
-            tableName: category
+            tableName: categories
             columns:
               - column: { name: name, value: "action" }
               - column: { name: description, value: "action books" }

@@ -2,7 +2,6 @@ package com.example.bookshop.service.implementation;
 
 import com.example.bookshop.criteria.SpecificationBuilder;
 import com.example.bookshop.dto.BookDto;
-import com.example.bookshop.dto.BookDtoWithoutCategoryIds;
 import com.example.bookshop.dto.BookSearchParametersDto;
 import com.example.bookshop.dto.CreateBookRequestDto;
 import com.example.bookshop.exception.EntityNotFoundException;
@@ -13,6 +12,8 @@ import com.example.bookshop.service.BookService;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -42,11 +43,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDtoWithoutCategoryIds> findAll(Pageable pageable) {
-        return bookRepository.findAll(pageable)
+    public Page<BookDto> findAll(Pageable pageable) {
+        return new PageImpl<>(bookRepository.findAll(pageable)
                 .stream()
-                .map(bookMapper::toDtoWithoutCategories)
-                .toList();
+                .map(bookMapper::toDto)
+                .toList());
     }
 
     @Override

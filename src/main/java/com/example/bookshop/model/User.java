@@ -25,7 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "users")
 @SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
-@Where(clause = "is_deleted = false")
+@Where(clause = "status <> 'DELETED'")
 @Getter
 @Setter
 public class User implements UserDetails {
@@ -48,6 +48,7 @@ public class User implements UserDetails {
 
     private String shippingAddress;
 
+    @Column(nullable = false)
     private boolean isDeleted = false;
 
     @ManyToMany
@@ -57,7 +58,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     @Enumerated(EnumType.STRING)
-     private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,6 +1,6 @@
 package com.example.bookshop.controller;
 
-import com.example.bookshop.dto.BookDto;
+import com.example.bookshop.dto.BookDtoWithoutCategoryIds;
 import com.example.bookshop.dto.CategoryDto;
 import com.example.bookshop.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +39,7 @@ public class CategoryController {
 
     @Operation(summary = "Get all categories", description = "Find all categories")
     @GetMapping
-    public List<CategoryDto> getAll(Pageable pageable) {
+    public Page<CategoryDto> getAll(Pageable pageable) {
         return categoryService.findAll(pageable);
     }
 
@@ -65,7 +66,7 @@ public class CategoryController {
 
     @Operation(summary = "Get books by category id", description = "Find books by category id")
     @GetMapping("/{id}/books")
-    public List<BookDto> getBooksByCategoryId(@PathVariable Long id) {
+    public List<BookDtoWithoutCategoryIds> getBooksByCategoryId(@PathVariable Long id) {
         return categoryService.findAllByCategoryId(id);
     }
 }

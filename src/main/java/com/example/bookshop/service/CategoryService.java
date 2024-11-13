@@ -1,12 +1,13 @@
 package com.example.bookshop.service;
 
-import com.example.bookshop.dto.BookDto;
+import com.example.bookshop.dto.BookDtoWithoutCategoryIds;
 import com.example.bookshop.dto.CategoryDto;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CategoryService {
-    List<CategoryDto> findAll(Pageable pageable);
+    Page<CategoryDto> findAll(Pageable pageable);
 
     CategoryDto getById(Long id);
 
@@ -16,5 +17,5 @@ public interface CategoryService {
 
     void deleteById(Long id);
 
-    List<BookDto> findAllByCategoryId(Long id);
+    List<BookDtoWithoutCategoryIds> findAllByCategoryId(Long id);
 }
