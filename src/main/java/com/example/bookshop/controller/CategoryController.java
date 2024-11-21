@@ -2,6 +2,7 @@ package com.example.bookshop.controller;
 
 import com.example.bookshop.dto.BookDtoWithoutCategoryIds;
 import com.example.bookshop.dto.CategoryDto;
+import com.example.bookshop.dto.CategoryRequestDto;
 import com.example.bookshop.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,7 +34,7 @@ public class CategoryController {
     @Operation(summary = "Create category", description = "Create new category")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public CategoryDto createCategory(@RequestBody @Valid CategoryDto categoryDto) {
+    public CategoryDto createCategory(@RequestBody @Valid CategoryRequestDto categoryDto) {
         return categoryService.save(categoryDto);
     }
 
@@ -52,7 +53,8 @@ public class CategoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update category", description = "Update information in the category")
     @PutMapping("/{id}")
-    public CategoryDto updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
+    public CategoryDto updateCategory(@PathVariable Long id,
+                                      @RequestBody CategoryRequestDto categoryDto) {
         return categoryService.update(id, categoryDto);
     }
 
