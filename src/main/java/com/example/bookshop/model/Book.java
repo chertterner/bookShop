@@ -18,11 +18,11 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @SQLDelete(sql = "UPDATE books SET is_deleted = true WHERE id = ?")
-@Where(clause = "status <> 'DELETED'")
+@SQLRestriction("status <> 'DELETED'")
 @Table(name = "books")
 @Getter
 @Setter
