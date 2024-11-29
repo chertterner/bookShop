@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: admin
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "horror" }
+              - column: { name: description, value: "horror books" }
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "action" }
+              - column: { name: description, value: "action books" }

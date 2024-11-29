@@ -1,6 +1,7 @@
 package com.example.bookshop.mapper;
 
 import com.example.bookshop.dto.BookDto;
+import com.example.bookshop.dto.BookDtoWithoutCategoryIds;
 import com.example.bookshop.dto.CreateBookRequestDto;
 import com.example.bookshop.mapperconfig.MapperConfig;
 import com.example.bookshop.model.Book;
@@ -11,4 +12,6 @@ public interface BookMapper {
     BookDto toDto(Book book);
 
     Book toModel(CreateBookRequestDto bookRequestDto);
+
+    BookDtoWithoutCategoryIds toDtoWithoutCategories(Book book);
 }

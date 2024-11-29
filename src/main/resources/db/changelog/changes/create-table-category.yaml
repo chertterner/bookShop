@@ -4,17 +4,20 @@ databaseChangeLog:
       author: admin
       changes:
         - createTable:
-            tableName: users_roles
+            tableName: categories
             columns:
               - column:
-                  name: user_id
+                  name: id
                   type: bigint
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: role_id
-                  type: bigint
+                  name: name
+                  type: varchar(255)
                   constraints:
-                    primaryKey: true
                     nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
