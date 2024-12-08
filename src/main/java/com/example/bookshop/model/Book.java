@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -51,4 +52,7 @@ public class Book {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Category> categories = new HashSet<>();
+    @OneToOne
+    @JoinColumn(name = "cart_item", referencedColumnName = "id")
+    private CartItem cartItem;
 }
