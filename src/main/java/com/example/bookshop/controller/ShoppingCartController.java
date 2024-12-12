@@ -1,8 +1,8 @@
 package com.example.bookshop.controller;
 
-import com.example.bookshop.dto.AddBookShoppingCartRequestDto;
-import com.example.bookshop.dto.BookQuantityReqDto;
+import com.example.bookshop.dto.CartItemRequestDto;
 import com.example.bookshop.dto.ShoppingCartDto;
+import com.example.bookshop.dto.UpdateCartItemDto;
 import com.example.bookshop.service.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,20 +43,22 @@ public class ShoppingCartController {
             description = "Add new book to the shopping cart")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void addBookShoppingCart(
-            @RequestBody @Valid AddBookShoppingCartRequestDto
-                    addBookShoppingCartRequestDto,
+    public ShoppingCartDto addBookShoppingCart(
+            @RequestBody @Valid CartItemRequestDto
+                    cartItemRequestDto,
             @AuthenticationPrincipal UserDetails userDetails) {
-        shoppingCartService.save(addBookShoppingCartRequestDto, userDetails);
+        return shoppingCartService.save(cartItemRequestDto, userDetails);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Update quantity of a book", description = "Update quantity of a book")
     @PutMapping("/items/{id}")
-    public void updateCategory(@PathVariable Long id,
-                                      @RequestBody BookQuantityReqDto bookQuantityReqDto,
-                               @AuthenticationPrincipal UserDetails userDetails) {
-        shoppingCartService.updateBookQuantity(id, bookQuantityReqDto.getQuantity(), userDetails);
+    public ShoppingCartDto updateBookQuantity(@PathVariable Long id,
+                                              @RequestBody UpdateCartItemDto updateCartItemDto,
+                                              @AuthenticationPrincipal UserDetails userDetails) {
+        return shoppingCartService.updateBookQuantity(
+                id, updateCartItemDto.getQuantity(), userDetails
+        );
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
