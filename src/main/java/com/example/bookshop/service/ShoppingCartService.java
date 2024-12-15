@@ -1,18 +1,18 @@
 package com.example.bookshop.service;
 
-import com.example.bookshop.dto.CartItemRequestDto;
-import com.example.bookshop.dto.ShoppingCartDto;
+import com.example.bookshop.dto.cartitem.CartItemRequestDto;
+import com.example.bookshop.dto.cartitem.ShoppingCartDto;
+import com.example.bookshop.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
 
 public interface ShoppingCartService {
     Page<ShoppingCartDto> findAll(Pageable pageable);
 
     ShoppingCartDto save(CartItemRequestDto
-                      cartItemRequestDto, UserDetails userDetails);
+                      cartItemRequestDto, User user);
 
-    ShoppingCartDto updateBookQuantity(Long id, int quantity, UserDetails userDetails);
+    ShoppingCartDto updateBookQuantity(Long id, int quantity, User user);
 
-    void deleteBook(Long id, UserDetails userDetails);
+    void deleteBook(Long id, User user);
 }

@@ -4,7 +4,7 @@ databaseChangeLog:
       author: serg
       changes:
         - createTable:
-            tableName: shopping_cart
+            tableName: shopping_carts
             columns:
               - column:
                   name: id

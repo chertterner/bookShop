@@ -1,13 +1,14 @@
-package com.example.bookshop.dto;
+package com.example.bookshop.dto.cartitem;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 @Data
 public class CartItemRequestDto {
     @NotNull
+    @Positive
     private Long bookId;
-    @Length(min = 1)
+    @Positive
     private int quantity;
 }

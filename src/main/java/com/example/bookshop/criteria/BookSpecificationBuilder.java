@@ -1,6 +1,6 @@
 package com.example.bookshop.criteria;
 
-import com.example.bookshop.dto.BookSearchParametersDto;
+import com.example.bookshop.dto.book.BookSearchParametersDto;
 import com.example.bookshop.model.Book;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;

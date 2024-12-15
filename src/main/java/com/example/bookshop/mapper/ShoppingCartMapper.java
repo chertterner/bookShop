@@ -1,6 +1,6 @@
 package com.example.bookshop.mapper;
 
-import com.example.bookshop.dto.ShoppingCartDto;
+import com.example.bookshop.dto.cartitem.ShoppingCartDto;
 import com.example.bookshop.mapperconfig.MapperConfig;
 import com.example.bookshop.model.ShoppingCart;
 import org.mapstruct.Mapper;
