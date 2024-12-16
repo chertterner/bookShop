@@ -39,15 +39,24 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
+    public void createShoppingCartWithUser(User user) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(user);
+        shoppingCartRepository.save(shoppingCart);
+    }
+
+    @Override
     public ShoppingCartDto save(CartItemRequestDto cartItemRequestDto,
                                 User user) {
         ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUser_Id(
                 user.getId()
         );
-        Optional<CartItem> cartItem = Optional.ofNullable(
-                cartItemRepository.findByBook_IdAndShoppingCart_Id(
-                cartItemRequestDto.getBookId(), shoppingCart.getId()
-        ));
+        Optional<CartItem> cartItem = shoppingCart.getCartItems()
+                .stream()
+                .filter(item -> item.getBook()
+                        .getId()
+                        .equals(cartItemRequestDto.getBookId())
+                ).findFirst();
         if (cartItem.isPresent()) {
             throw new EntityNotFoundException("This book exists in your cart");
         } else {

@@ -15,4 +15,6 @@ public interface ShoppingCartService {
     ShoppingCartDto updateBookQuantity(Long id, int quantity, User user);
 
     void deleteBook(Long id, User user);
+
+    void createShoppingCartWithUser(User user);
 }
