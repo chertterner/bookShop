@@ -1,7 +1,7 @@
 package com.example.bookshop.security;
 
-import com.example.bookshop.dto.UserLoginRequestDto;
-import com.example.bookshop.dto.UserLoginResponseDto;
+import com.example.bookshop.dto.user.UserLoginRequestDto;
+import com.example.bookshop.dto.user.UserLoginResponseDto;
 import com.example.bookshop.securityconfig.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,13 +1,14 @@
 package com.example.bookshop.service.implementation;
 
-import com.example.bookshop.dto.UserRegistrationRequestDto;
-import com.example.bookshop.dto.UserResponseDto;
+import com.example.bookshop.dto.user.UserRegistrationRequestDto;
+import com.example.bookshop.dto.user.UserResponseDto;
 import com.example.bookshop.exception.RegistrationException;
 import com.example.bookshop.mapper.UserMapper;
 import com.example.bookshop.model.Role;
 import com.example.bookshop.model.User;
 import com.example.bookshop.repository.RoleRepository;
 import com.example.bookshop.repository.UserRepository;
+import com.example.bookshop.service.ShoppingCartService;
 import com.example.bookshop.service.UserService;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final ShoppingCartService shoppingCartService;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto userRegistrationRequestDto)
@@ -36,6 +38,7 @@ public class UserServiceImpl implements UserService {
         Role userRole = roleRepository.findByRole(Role.RoleName.USER);
         user.setRoles(Set.of(userRole));
         userRepository.save(user);
+        shoppingCartService.createShoppingCartWithUser(user);
         return userMapper.toUserResponceDto(user);
     }
 }

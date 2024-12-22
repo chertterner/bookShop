@@ -40,10 +40,8 @@ public class User implements UserDetails {
     @NotNull
     private String lastName;
     private String shippingAddress;
-
     @Column(nullable = false)
     private boolean isDeleted = false;
-
     @ManyToMany
     @JoinTable(
             name = "users_roles",

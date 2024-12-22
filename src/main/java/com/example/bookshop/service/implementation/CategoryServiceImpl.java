@@ -1,8 +1,8 @@
 package com.example.bookshop.service.implementation;
 
-import com.example.bookshop.dto.BookDtoWithoutCategoryIds;
-import com.example.bookshop.dto.CategoryDto;
-import com.example.bookshop.dto.CategoryRequestDto;
+import com.example.bookshop.dto.book.BookDtoWithoutCategoryIds;
+import com.example.bookshop.dto.category.CategoryDto;
+import com.example.bookshop.dto.category.CategoryRequestDto;
 import com.example.bookshop.exception.EntityNotFoundException;
 import com.example.bookshop.mapper.BookMapper;
 import com.example.bookshop.mapper.CategoryMapper;
