@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: admin
+      changes:
+        - insert:
+            tableName: order_items
+            columns:
+              - column: { name: price, value: "100.00" }
+              - column: { name: quantity, value: "3" }
+              - column: { name: book_id, value: "3" }
+              - column: { name: order_id, value: "1" }
+
+        - insert:
+            tableName: order_items
+            columns:
+              - column: { name: price, value: "99.00" }
+              - column: { name: quantity, value: "2" }
+              - column: { name: book_id, value: "2" }
+              - column: { name: order_id, value: "2" }
