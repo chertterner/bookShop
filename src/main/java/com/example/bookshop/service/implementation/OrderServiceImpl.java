@@ -8,8 +8,10 @@ import com.example.bookshop.exception.EntityNotFoundException;
 import com.example.bookshop.mapper.OrderItemMapper;
 import com.example.bookshop.mapper.OrderMapper;
 import com.example.bookshop.model.Order;
+import com.example.bookshop.model.ShoppingCart;
 import com.example.bookshop.model.User;
 import com.example.bookshop.repository.OrderRepository;
+import com.example.bookshop.repository.ShoppingCartRepository;
 import com.example.bookshop.service.OrderService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
     private OrderMapper orderMapper;
     private OrderItemMapper orderItemMapper;
+    private ShoppingCartRepository shoppingCartRepository;
 
     @Override
     public Page<OrderDto> findAll(Pageable pageable) {
@@ -37,32 +40,35 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto save(ShippingAddressRequestDto shippingAddressRequestDto,
-                                User user) {
-        Order order = orderRepository.findByUser_Id(user.getId());
-
-        if (order == null) {
-            throw new EntityNotFoundException("This order doesn't exist");
-        } else {
-            order.setShippingAddress(shippingAddressRequestDto.getShippingAddress());
+                         User user) {
+        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUser_Id(user.getId());
+        if (shoppingCart.getCartItems().isEmpty()) {
+            throw new EntityNotFoundException("There is empty shopping cart!");
         }
-        return orderMapper.toDto(orderRepository.save(order));
-    }
-
-    @Override
-    public OrderDto updateStatus(Long id, UpdateStatusDto updateStatusDto) {
-        Optional<Order> order = orderRepository.findById(id);
-
+        Optional<Order> order = orderRepository.findByUser_Id(user.getId());
         if (order.isEmpty()) {
             throw new EntityNotFoundException("This order doesn't exist");
         } else {
-            order.get().setStatus(updateStatusDto.getStatus());
+            order.get()
+                    .setShippingAddress(shippingAddressRequestDto
+                            .getShippingAddress());
         }
         return orderMapper.toDto(orderRepository.save(order.get()));
     }
 
     @Override
-    public Page<OrderItemDto> findAllOrderItems(Long id, Pageable pageable) {
-        return new PageImpl<>(orderRepository.findById(id)
+    public OrderDto updateStatus(Long id, UpdateStatusDto updateStatusDto) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("This order doesn't exist")
+                );
+        order.setStatus(updateStatusDto.getStatus());
+        return orderMapper.toDto(orderRepository.save(order));
+    }
+
+    @Override
+    public Page<OrderItemDto> findAllOrderItems(Long id, User user, Pageable pageable) {
+        return new PageImpl<>(orderRepository.findByIdAndUser_Id(id, user.getId())
                 .get()
                 .getOrderItems()
                 .stream()
@@ -71,14 +77,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderItemDto> findSpecificOrderItem(Long id, Long itemId, Pageable pageable) {
-        return new PageImpl<>(orderRepository.findById(id)
+    public Page<OrderItemDto> findSpecificOrderItem(Long orderId,
+                                                    Long itemId,
+                                                    User user,
+                                                    Pageable pageable) {
+        return new PageImpl<>(orderRepository.findByIdAndUser_Id(orderId, user.getId())
                 .get()
                 .getOrderItems()
                 .stream()
-                .filter(orderItem -> orderItem.getId()
-                        .equals(itemId))
+                .filter(orderItem -> orderItem.getId().equals(itemId))
                 .map(orderItemMapper::toDto)
-                .toList());
+                .toList()
+        );
     }
 }

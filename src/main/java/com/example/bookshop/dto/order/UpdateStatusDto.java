@@ -1,11 +1,11 @@
 package com.example.bookshop.dto.order;
 
 import com.example.bookshop.model.Status;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class UpdateStatusDto {
-    @NotNull
+    @NotBlank
     private Status status;
 }

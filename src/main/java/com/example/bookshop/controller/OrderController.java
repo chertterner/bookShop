@@ -61,15 +61,19 @@ public class OrderController {
     @Operation(summary = "Get all order items for a specific order",
             description = "Retrieve all order items for a specific order")
     @GetMapping("/{id}/items")
-    public Page<OrderItemDto> getAllOrderItems(@PathVariable Long id, Pageable pageable) {
-        return orderService.findAllOrderItems(id, pageable);
+    public Page<OrderItemDto> getAllOrderItems(@PathVariable Long id,
+                                               @AuthenticationPrincipal User user,
+                                               Pageable pageable) {
+        return orderService.findAllOrderItems(id, user, pageable);
     }
 
     @Operation(summary = "Get a specific order item within an order",
             description = "Retrieve a specific order item within an order")
     @GetMapping("/{id}/items/{itemId}")
-    public Page<OrderItemDto> getSpecificOrder(@PathVariable Long id, @PathVariable Long itemId,
-                                     Pageable pageable) {
-        return orderService.findSpecificOrderItem(id, itemId, pageable);
+    public Page<OrderItemDto> getSpecificOrder(@PathVariable Long orderId,
+                                               @PathVariable Long itemId,
+                                               @AuthenticationPrincipal User user,
+                                               Pageable pageable) {
+        return orderService.findSpecificOrderItem(orderId, itemId, user, pageable);
     }
 }
