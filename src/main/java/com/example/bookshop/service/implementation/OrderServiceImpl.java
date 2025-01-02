@@ -4,7 +4,7 @@ import com.example.bookshop.dto.order.OrderDto;
 import com.example.bookshop.dto.order.OrderItemDto;
 import com.example.bookshop.dto.order.ShippingAddressRequestDto;
 import com.example.bookshop.dto.order.UpdateStatusDto;
-import com.example.bookshop.exception.EntityNotFoundException;
+import com.example.bookshop.exception.OrderProcessingException;
 import com.example.bookshop.mapper.OrderItemMapper;
 import com.example.bookshop.mapper.OrderMapper;
 import com.example.bookshop.model.Order;
@@ -32,27 +32,27 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<OrderDto> findAll(Pageable pageable) {
-        return new PageImpl<>(orderRepository.findAll(pageable)
-                .stream()
-                .map(orderMapper::toDto)
-                .toList());
+        return orderRepository.findAll(pageable)
+                .map(orderMapper::toDto);
     }
 
     @Override
     public OrderDto save(ShippingAddressRequestDto shippingAddressRequestDto,
                          User user) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUser_Id(user.getId());
+        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUserId(user.getId());
         if (shoppingCart.getCartItems().isEmpty()) {
-            throw new EntityNotFoundException("There is empty shopping cart!");
+            throw new OrderProcessingException("There is empty shopping cart!");
         }
-        Optional<Order> order = orderRepository.findByUser_Id(user.getId());
-        if (order.isEmpty()) {
-            throw new EntityNotFoundException("This order doesn't exist");
-        } else {
-            order.get()
-                    .setShippingAddress(shippingAddressRequestDto
-                            .getShippingAddress());
-        }
+        Optional<Order> order = Optional.ofNullable(
+                orderRepository.findByUserId(
+                                user.getId())
+                        .orElseThrow(
+                                () -> new OrderProcessingException("This order doesn't exist")
+                        )
+        );
+        order.get()
+                .setShippingAddress(shippingAddressRequestDto
+                        .getShippingAddress());
         return orderMapper.toDto(orderRepository.save(order.get()));
     }
 
@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto updateStatus(Long id, UpdateStatusDto updateStatusDto) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(
-                        () -> new EntityNotFoundException("This order doesn't exist")
+                        () -> new OrderProcessingException("This order doesn't exist")
                 );
         order.setStatus(updateStatusDto.getStatus());
         return orderMapper.toDto(orderRepository.save(order));
@@ -68,9 +68,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<OrderItemDto> findAllOrderItems(Long id, User user, Pageable pageable) {
-        return new PageImpl<>(orderRepository.findByIdAndUser_Id(id, user.getId())
-                .get()
-                .getOrderItems()
+        Order order = orderRepository.findByIdAndUserId(id, user.getId())
+                .orElseThrow(() -> new OrderProcessingException("This order doesn't exist"));
+        return new PageImpl<>(order.getOrderItems()
                 .stream()
                 .map(orderItemMapper::toDto)
                 .toList());
@@ -81,9 +81,9 @@ public class OrderServiceImpl implements OrderService {
                                                     Long itemId,
                                                     User user,
                                                     Pageable pageable) {
-        return new PageImpl<>(orderRepository.findByIdAndUser_Id(orderId, user.getId())
-                .get()
-                .getOrderItems()
+        Order order = orderRepository.findByIdAndUserId(orderId, user.getId())
+                .orElseThrow(() -> new OrderProcessingException("This order doesn't exist"));
+        return new PageImpl<>(order.getOrderItems()
                 .stream()
                 .filter(orderItem -> orderItem.getId().equals(itemId))
                 .map(orderItemMapper::toDto)
