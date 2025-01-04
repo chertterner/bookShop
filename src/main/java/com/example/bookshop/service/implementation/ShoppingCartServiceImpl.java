@@ -83,7 +83,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void deleteBook(Long id, User user) {
         ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUserId(user.getId());
-        CartItem cartItem = cartItemRepository.findByBook_IdAndShoppingCartId(
+        CartItem cartItem = cartItemRepository.findByBookIdAndShoppingCartId(
                 id, shoppingCart.getId()
         );
         cartItemRepository.delete(cartItem);

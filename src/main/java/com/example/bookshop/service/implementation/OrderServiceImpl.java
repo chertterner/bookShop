@@ -7,16 +7,20 @@ import com.example.bookshop.dto.order.UpdateStatusDto;
 import com.example.bookshop.exception.OrderProcessingException;
 import com.example.bookshop.mapper.OrderItemMapper;
 import com.example.bookshop.mapper.OrderMapper;
+import com.example.bookshop.model.CartItem;
 import com.example.bookshop.model.Order;
+import com.example.bookshop.model.OrderItem;
 import com.example.bookshop.model.ShoppingCart;
+import com.example.bookshop.model.Status;
 import com.example.bookshop.model.User;
 import com.example.bookshop.repository.OrderRepository;
 import com.example.bookshop.repository.ShoppingCartRepository;
 import com.example.bookshop.service.OrderService;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,23 +41,36 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto save(ShippingAddressRequestDto shippingAddressRequestDto,
+    public OrderDto save(
+            ShippingAddressRequestDto shippingAddressRequestDto,
                          User user) {
         ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUserId(user.getId());
         if (shoppingCart.getCartItems().isEmpty()) {
-            throw new OrderProcessingException("There is empty shopping cart!");
+            throw new OrderProcessingException(
+                    "There is empty shopping cart#" + shoppingCart.getId()
+            );
         }
-        Optional<Order> order = Optional.ofNullable(
-                orderRepository.findByUserId(
-                                user.getId())
-                        .orElseThrow(
-                                () -> new OrderProcessingException("This order doesn't exist")
-                        )
-        );
-        order.get()
-                .setShippingAddress(shippingAddressRequestDto
-                        .getShippingAddress());
-        return orderMapper.toDto(orderRepository.save(order.get()));
+        Order order = new Order();
+        order.setShippingAddress(shippingAddressRequestDto.getShippingAddress());
+        order.setOrderDate(LocalDateTime.now());
+        order.setStatus(Status.PENDING);
+        order.setUser(user);
+        order.setTotal(shoppingCart.getCartItems().stream().map(cartItem -> {
+            BigDecimal price = cartItem.getBook().getPrice();
+            long quantity = cartItem.getQuantity();
+            return price.multiply(BigDecimal.valueOf(quantity));
+        }).reduce(BigDecimal.ZERO, BigDecimal::add));
+        Set<CartItem> cartItemSet = shoppingCart.getCartItems();
+        cartItemSet.stream().map(cartItem -> {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setBook(cartItem.getBook());
+            orderItem.setPrice(cartItem.getBook().getPrice());
+            orderItem.setQuantity(cartItem.getQuantity());
+            order.getOrderItems().add(orderItem);
+            return order;
+        });
+        shoppingCartRepository.delete(shoppingCart);
+        return orderMapper.toDto(orderRepository.save(order));
     }
 
     @Override
@@ -67,27 +84,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderItemDto> findAllOrderItems(Long id, User user, Pageable pageable) {
-        Order order = orderRepository.findByIdAndUserId(id, user.getId())
-                .orElseThrow(() -> new OrderProcessingException("This order doesn't exist"));
-        return new PageImpl<>(order.getOrderItems()
-                .stream()
-                .map(orderItemMapper::toDto)
-                .toList());
+    public Page<OrderDto> findAllOrderItems(Long id, User user, Pageable pageable) {
+        Page<Order> order = orderRepository.findByIdAndUserId(id, user.getId(), pageable);
+        return order.map(orderMapper::toDto);
     }
 
     @Override
-    public Page<OrderItemDto> findSpecificOrderItem(Long orderId,
+    public OrderItemDto findSpecificOrderItem(Long orderId,
                                                     Long itemId,
                                                     User user,
                                                     Pageable pageable) {
-        Order order = orderRepository.findByIdAndUserId(orderId, user.getId())
-                .orElseThrow(() -> new OrderProcessingException("This order doesn't exist"));
-        return new PageImpl<>(order.getOrderItems()
+        Order order = orderRepository.findByIdAndUserId(orderId, user.getId());
+        return order.getOrderItems()
                 .stream()
                 .filter(orderItem -> orderItem.getId().equals(itemId))
-                .map(orderItemMapper::toDto)
-                .toList()
-        );
+                .map(orderItemMapper::toDto).findFirst().get();
     }
 }
