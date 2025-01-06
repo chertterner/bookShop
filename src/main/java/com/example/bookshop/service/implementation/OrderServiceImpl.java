@@ -2,7 +2,7 @@ package com.example.bookshop.service.implementation;
 
 import com.example.bookshop.dto.order.OrderDto;
 import com.example.bookshop.dto.order.OrderItemDto;
-import com.example.bookshop.dto.order.ShippingAddressRequestDto;
+import com.example.bookshop.dto.order.ShippingAddressDto;
 import com.example.bookshop.dto.order.UpdateStatusDto;
 import com.example.bookshop.exception.OrderProcessingException;
 import com.example.bookshop.mapper.OrderItemMapper;
@@ -42,33 +42,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto save(
-            ShippingAddressRequestDto shippingAddressRequestDto,
-                         User user) {
+            ShippingAddressDto shippingAddressDto,
+            User user) {
         ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUserId(user.getId());
         if (shoppingCart.getCartItems().isEmpty()) {
             throw new OrderProcessingException(
                     "There is empty shopping cart#" + shoppingCart.getId()
             );
         }
-        Order order = new Order();
-        order.setShippingAddress(shippingAddressRequestDto.getShippingAddress());
-        order.setOrderDate(LocalDateTime.now());
-        order.setStatus(Status.PENDING);
-        order.setUser(user);
-        order.setTotal(shoppingCart.getCartItems().stream().map(cartItem -> {
-            BigDecimal price = cartItem.getBook().getPrice();
-            long quantity = cartItem.getQuantity();
-            return price.multiply(BigDecimal.valueOf(quantity));
-        }).reduce(BigDecimal.ZERO, BigDecimal::add));
-        Set<CartItem> cartItemSet = shoppingCart.getCartItems();
-        cartItemSet.stream().map(cartItem -> {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setBook(cartItem.getBook());
-            orderItem.setPrice(cartItem.getBook().getPrice());
-            orderItem.setQuantity(cartItem.getQuantity());
-            order.getOrderItems().add(orderItem);
-            return order;
-        });
+        Order order = getFilledOrder(shippingAddressDto, user, shoppingCart);
+        fillOrderOrderItems(shoppingCart, order);
         shoppingCartRepository.delete(shoppingCart);
         return orderMapper.toDto(orderRepository.save(order));
     }
@@ -91,13 +74,40 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderItemDto findSpecificOrderItem(Long orderId,
-                                                    Long itemId,
-                                                    User user,
-                                                    Pageable pageable) {
+                                              Long itemId,
+                                              User user,
+                                              Pageable pageable) {
         Order order = orderRepository.findByIdAndUserId(orderId, user.getId());
         return order.getOrderItems()
                 .stream()
                 .filter(orderItem -> orderItem.getId().equals(itemId))
                 .map(orderItemMapper::toDto).findFirst().get();
+    }
+
+    private Order getFilledOrder(ShippingAddressDto shippingAddressDto,
+                                 User user, ShoppingCart shoppingCart) {
+        Order order = new Order();
+        order.setShippingAddress(shippingAddressDto.getShippingAddress());
+        order.setOrderDate(LocalDateTime.now());
+        order.setStatus(Status.PENDING);
+        order.setUser(user);
+        order.setTotal(shoppingCart.getCartItems().stream().map(cartItem -> {
+            BigDecimal price = cartItem.getBook().getPrice();
+            long quantity = cartItem.getQuantity();
+            return price.multiply(BigDecimal.valueOf(quantity));
+        }).reduce(BigDecimal.ZERO, BigDecimal::add));
+        return order;
+    }
+
+    private void fillOrderOrderItems(ShoppingCart shoppingCart, Order order) {
+        Set<CartItem> cartItemSet = shoppingCart.getCartItems();
+        cartItemSet.stream().map(cartItem -> {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setBook(cartItem.getBook());
+            orderItem.setPrice(cartItem.getBook().getPrice());
+            orderItem.setQuantity(cartItem.getQuantity());
+            order.getOrderItems().add(orderItem);
+            return order;
+        });
     }
 }

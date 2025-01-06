@@ -2,7 +2,7 @@ package com.example.bookshop.controller;
 
 import com.example.bookshop.dto.order.OrderDto;
 import com.example.bookshop.dto.order.OrderItemDto;
-import com.example.bookshop.dto.order.ShippingAddressRequestDto;
+import com.example.bookshop.dto.order.ShippingAddressDto;
 import com.example.bookshop.dto.order.UpdateStatusDto;
 import com.example.bookshop.model.User;
 import com.example.bookshop.service.OrderService;
@@ -44,17 +44,17 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public OrderDto addShippingAddress(
-            @RequestBody @Valid ShippingAddressRequestDto
-                    shippingAddressRequestDto,
+            @RequestBody @Valid ShippingAddressDto
+                    shippingAddressDto,
             @AuthenticationPrincipal User user) {
-        return orderService.save(shippingAddressRequestDto, user);
+        return orderService.save(shippingAddressDto, user);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update order status", description = "Update status")
     @PatchMapping("/{id}")
     public OrderDto updateStatus(@PathVariable Long id,
-                                              @RequestBody UpdateStatusDto updateStatusDto) {
+                                              @RequestBody @Valid UpdateStatusDto updateStatusDto) {
         return orderService.updateStatus(id, updateStatusDto);
     }
 
