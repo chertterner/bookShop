@@ -48,7 +48,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartDto save(CartItemRequestDto cartItemRequestDto,
                                 User user) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUser_Id(
+        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUserId(
                 user.getId()
         );
         Optional<CartItem> cartItem = shoppingCart.getCartItems()
@@ -70,10 +70,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartDto updateBookQuantity(Long id, int quantity, User user) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUser_Id(
+        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUserId(
                 user.getId()
         );
-        CartItem cartItem = cartItemRepository.findByIdAndShoppingCart_Id(
+        CartItem cartItem = cartItemRepository.findByIdAndShoppingCartId(
                 id, shoppingCart.getId()
         );
         cartItem.setQuantity(quantity);
@@ -82,8 +82,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void deleteBook(Long id, User user) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUser_Id(user.getId());
-        CartItem cartItem = cartItemRepository.findByBook_IdAndShoppingCart_Id(
+        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUserId(user.getId());
+        CartItem cartItem = cartItemRepository.findByBookIdAndShoppingCartId(
                 id, shoppingCart.getId()
         );
         cartItemRepository.delete(cartItem);
