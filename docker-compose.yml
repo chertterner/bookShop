@@ -1,6 +1,6 @@
 services:
   mysqldb:
-    image: mysql
+    image: mysql:8
     restart: unless-stopped
     env_file: ./.env
     environment:
@@ -9,7 +9,7 @@ services:
       - MYSQLDB_PASSWORD=$MYSQLDB_PASSWORD
       - MYSQLDB_DATABASE=$MYSQLDB_DATABASE
     ports:
-      - $MYSQLDB_DOCKER_PORT:$MYSQLDB_LOCAL_PORT
+      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     healthcheck:
       test: [ "CMD-SHELL", "msql_ready -U mysql" ]
       interval: 30s
